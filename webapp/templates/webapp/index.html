@@ -8,20 +8,23 @@
         <div class="jumbotron">
             <h1 class="display-3">Los gehts!</h1>
             <p class="lead">Erstelle eine neue Session, füge Teilnehmer hinzu und leg los. Oder trete einer
-            bestehenden Session bei.</p>
+                bestehenden Session bei.</p>
             <hr class="my-4">
-            <form action="{%url 'newsession' %}" method="post">
-                <button type="submit" class="btn btn-success">Neue Session erstellen</button>
-            </form>
-            - oder -
-            <form action="{%url 'session' %}" method="post">
-                <div class="input-group">
-                    <input type="text" name="sessionid" placeholder="Session ID">
-                    <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary">Session beitreten</button>
-        </span>
-                </div>
-            </form>
+            <div class="text-center w-100">
+                <form action="{%url 'newsession' %}" method="post">
+                    <button type="submit" class="btn btn-success">Neue Session erstellen</button>
+                </form>
+                <span class="px-4">oder</span>
+                <form action="{%url 'session' %}" method="post">
+                    <div class="input-group">
+                        <input type="text" name="sessionid" placeholder="Session ID"
+                               class="form-control border border-primary">
+                        <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">Session beitreten</button>
+                    </span>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
