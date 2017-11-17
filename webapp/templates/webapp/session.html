@@ -3,29 +3,60 @@
 {% block title %}SmartDice{% endblock %}
 
 {% block content %}
-Das hier ist Session {{game_session.id}}.
-Session-Link: <a href="{{session_url}}">{{session_url}}</a>
-<a href="{%url 'index' %}">Zurück zur Hauptseite</a>
-<form action="{%url 'endsession' %}" method="post">
-    <button type="submit">Session beenden</button>
-    <input type="hidden" name="sessionid" value="{{game_session.id}}">
-</form>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Session</h4>
+                Das hier ist eine Session mit der ID {{game_session.id}}. Die Session ist öffentlich zugänglich.
+                Andere Teilnehmer können darauf zugreifen, indem sie dem Session-Link folgen:
+                <br><br>
+                Session-Link: <a href="{{session_url}}">{{session_url}}</a><br><br>
+                <form action="{%url 'endsession' %}" method="post">
+                    <button type="submit" class="btn btn-danger">Session beenden</button>
+                    <input type="hidden" name="sessionid" value="{{game_session.id}}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <br>
-Teilnehmer:
-<ul>
-    {% for user in game_session.sessionuser_set.all %}
-    <li>{{user.name}} ({{user.id}})
-        <form action="{%url 'removeuser' %}" method="post">
-            <button type="submit">x</button>
-            <input type="hidden" name="userid" value="{{user.id}}">
-            <input type="hidden" name="sessionid" value="{{game_session.id}}">
-        </form>
-    </li>
-    {% endfor %}
-</ul>
-<form action="{%url 'adduser' %}" method="post">
-    <input type="text" name="username">
-    <button type="submit">Teilnehmer hinzufügen</button>
-    <input type="hidden" name="sessionid" value="{{game_session.id}}">
-</form>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Würfelergebnisse</h4>
+                Hier kommt der Hauptbereich hin.
+            </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <h4>Teilnehmer</h4>
+            </li>
+            {% for user in game_session.sessionuser_set.all %}
+            <li class="list-group-item">{{user.name}} <span class="badge badge-pill badge-light">{{user.id}}</span>
+                <form action="{%url 'removeuser' %}" method="post">
+                    <button type="submit" class="btn btn-link close">&times;</button>
+                    <input type="hidden" name="userid" value="{{user.id}}">
+                    <input type="hidden" name="sessionid" value="{{game_session.id}}">
+                </form>
+            </li>
+            {% endfor %}
+            <li class="list-group-item">
+                <form action="{%url 'adduser' %}" method="post" class="w-100">
+                    <div class="input-group">
+                        <input type="text" name="username" class="w-100">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-success">+</button>
+                        </span>
+                    </div>
+                    <input type="hidden" name="sessionid" value="{{game_session.id}}">
+                </form>
+            </li>
+        </ul>
+
+    </div>
+</div>
 {% endblock %}
