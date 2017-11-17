@@ -1,0 +1,31 @@
+{% extends "webapp/base.html" %}
+
+{% block title %}SmartDice{% endblock %}
+
+{% block content %}
+Das hier ist Session {{game_session.id}}.
+Session-Link: <a href="{{session_url}}">{{session_url}}</a>
+<a href="{%url 'index' %}">Zurück zur Hauptseite</a>
+<form action="{%url 'endsession' %}" method="post">
+    <button type="submit">Session beenden</button>
+    <input type="hidden" name="sessionid" value="{{game_session.id}}">
+</form>
+<br>
+Teilnehmer:
+<ul>
+    {% for user in game_session.sessionuser_set.all %}
+    <li>{{user.name}} ({{user.id}})
+        <form action="{%url 'removeuser' %}" method="post">
+            <button type="submit">x</button>
+            <input type="hidden" name="userid" value="{{user.id}}">
+            <input type="hidden" name="sessionid" value="{{game_session.id}}">
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<form action="{%url 'adduser' %}" method="post">
+    <input type="text" name="username">
+    <button type="submit">Teilnehmer hinzufügen</button>
+    <input type="hidden" name="sessionid" value="{{game_session.id}}">
+</form>
+{% endblock %}

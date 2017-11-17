@@ -1,0 +1,20 @@
+{% extends "webapp/base.html" %}
+
+{% block title %}SmartDice{% endblock %}
+
+{% block content %}
+<form action="{%url 'newsession' %}" method="post">
+    <button type="submit">Neue Session erstellen</button>
+</form>
+<br>
+- oder -
+<br>
+<br>
+<form action="{%url 'session' %}" method="post">
+    <input type="text" name="sessionid">
+    <button type="submit">Session beitreten</button>
+</form>
+<br>
+Aktive Sessions: <br>
+{{sessions}}
+{% endblock %}
