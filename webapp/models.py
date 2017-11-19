@@ -3,9 +3,14 @@ from django.db import models
 
 # Create your models here.
 class GameSession(models.Model):
-    pass
+    active_user = models.ForeignKey('SessionUser', on_delete=models.SET_NULL, default=None, null=True)
 
 
 class SessionUser(models.Model):
     name = models.CharField(max_length=200)
+    session = models.ForeignKey(GameSession, on_delete=models.CASCADE, default=None)
+
+
+class SmartDice(models.Model):
+    dice_number = models.IntegerField()
     session = models.ForeignKey(GameSession, on_delete=models.CASCADE, default=None)
