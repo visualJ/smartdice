@@ -1,0 +1,30 @@
+{% extends "webapp/card.html" %}
+
+{% block title %}Verbundene Würfel{% endblock %}
+
+{% block content %}
+Hier können SmartDice-Würfel mit der Session verbunden werden.
+<br><br>
+<div class="list-group">
+    {% for dice in game_session.smartdice_set.all %}
+    <span class="d-flex justify-content-between align-items-center">
+        <span class="list-group-item rounded-0 d-flex justify-content-between align-items-center w-100">
+            {{dice.dice_number}}
+        </span>
+        <a href="{%url 'removedice' session_id=game_session.id dice_id=dice.id %}"
+           class="btn btn-link close">
+            <span class="fa fa-minus"></span>
+        </a>
+    </span>
+    {% endfor %}
+</div>
+<br>
+<form action="{%url 'adddice' session_id=game_session.id %}" method="post" class="w-100">
+    <div class="input-group">
+        <input type="text" name="dice_number" class="w-100 form-control" placeholder="SmartDice Nummer">
+        <span class="input-group-btn">
+                        <button type="submit" class="btn btn-success"><span class="fa fa-plus"></span></button>
+                        </span>
+    </div>
+</form>
+{% endblock %}

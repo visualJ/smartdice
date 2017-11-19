@@ -5,82 +5,19 @@
 {% block content %}
 <div class="row">
     <div class="col-sm">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Session</h4>
-                Das hier ist eine Session mit der ID {{game_session.id}}. Die Session ist öffentlich zugänglich.
-                Andere Teilnehmer können darauf zugreifen, indem sie dem Session-Link folgen:
-                <br><br>
-                Session-Link: <a href="{{session_url}}">{{session_url}}</a><br><br>
-                <a href="{%url 'endsession' session_id=game_session.id %}" class="btn btn-danger">Session beenden</a>
-            </div>
-        </div>
+        {% include "webapp/session-card.html" %}
     </div>
     <div class="col-sm-5">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Verbundene Würfel</h4>
-                Hier können SmartDice-Würfel mit der Session verbunden werden.
-                <br><br>
-                <div class="list-group">
-                    {% for dice in game_session.smartdice_set.all %}
-                    <span class="d-flex justify-content-between align-items-center">
-                        <span class="list-group-item rounded-0 d-flex justify-content-between align-items-center w-100">
-                            {{dice.dice_number}}
-                        </span>
-                        <a href="{%url 'removedice' session_id=game_session.id dice_id=dice.id %}"
-                           class="btn btn-link close"><span class="fa fa-minus"></span></a>
-                    </span>
-                    {% endfor %}
-                </div>
-                <br>
-                <form action="{%url 'adddice' session_id=game_session.id %}" method="post" class="w-100">
-                    <div class="input-group">
-                        <input type="text" name="dice_number" class="w-100 form-control" placeholder="SmartDice Nummer">
-                        <span class="input-group-btn">
-                        <button type="submit" class="btn btn-success"><span class="fa fa-plus"></span></button>
-                        </span>
-                    </div>
-                </form>
-            </div>
-        </div>
+        {% include "webapp/dice-card.html" %}
     </div>
 </div>
 <br>
 <div class="row">
     <div class="col-sm">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Würfelergebnisse</h4>
-                Hier kommt der Hauptbereich hin.
-            </div>
-        </div>
+        {% include "webapp/results-card.html" %}
     </div>
     <div class="col-sm-5">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Teilnehmer</h4>
-                <div class="list-group">
-                    {% for user in game_session.sessionuser_set.all %}
-                    <span class="d-flex justify-content-between align-items-center">
-                        <a href="{%url 'activateuser' session_id=game_session.id user_id=user.id %}"
-                           class="list-group-item rounded-0 d-flex justify-content-between align-items-center list-group-item-action {% if user.id == game_session.active_user.id %}active{% endif %}">{{user.name}}</a>
-                        <a href="{%url 'removeuser' session_id=game_session.id user_id=user.id %}"
-                           class="btn btn-link close"><span class="fa fa-minus"></span></a>
-                    </span>
-                    {% endfor %}
-                </div>
-                <br>
-                <form action="{%url 'adduser' session_id=game_session.id %}" method="post" class="w-100">
-                    <div class="input-group">
-                        <input type="text" name="username" class="w-100 form-control" placeholder="Name">
-                        <span class="input-group-btn">
-                        <button type="submit" class="btn btn-success"><span class="fa fa-plus"></span></button>
-                        </span>
-                    </div>
-                </form>
-            </div>
-        </div>
+        {% include "webapp/users-card.html" %}
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,11 @@
+{% extends "webapp/card.html" %}
+
+{% block title %}Session{% endblock %}
+
+{% block content %}
+Das hier ist eine Session mit der ID {{game_session.id}}. Die Session ist öffentlich zugänglich.
+Andere Teilnehmer können darauf zugreifen, indem sie dem Session-Link folgen:
+<br><br>
+Session-Link: <a href="{{session_url}}">{{session_url}}</a><br><br>
+<a href="{%url 'endsession' session_id=game_session.id %}" class="btn btn-danger">Session beenden</a>
+{% endblock %}
