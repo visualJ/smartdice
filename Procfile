@@ -1,1 +1,1 @@
-web: gunicorn restapitest.wsgi --log-file -
+web: gunicorn smartdice.wsgi --log-file -
