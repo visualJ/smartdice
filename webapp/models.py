@@ -14,3 +14,11 @@ class SessionUser(models.Model):
 class SmartDice(models.Model):
     dice_number = models.IntegerField()
     session = models.ForeignKey(GameSession, on_delete=models.CASCADE, default=None)
+
+
+class RollResult(models.Model):
+    time = models.DateTimeField(auto_now_add=True)
+    mode = models.CharField(max_length=20)
+    value = models.IntegerField()
+    user = models.ForeignKey(SessionUser, on_delete=models.CASCADE, default=None)
+    session = models.ForeignKey(GameSession, on_delete=models.CASCADE, default=None)

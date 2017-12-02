@@ -3,5 +3,24 @@
 {% block title %}Würfelergebnisse{% endblock %}
 
 {% block content %}
-Hier kommt der Hauptbereich hin.
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Zeit</th>
+            <th scope="col">Teilnehmer</th>
+            <th scope="col">Modus</th>
+            <th scope="col">Wert</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rollresult in game_session.rollresult_set.all|dictsortreversed:"time" %}
+            <tr>
+                <td>{{ rollresult.time }}</td>
+                <td>{{ rollresult.user.name }}</td>
+                <td>{{ rollresult.mode }}</td>
+                <td><span class="h3">{{ rollresult.value }}</span></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
