@@ -1,12 +1,11 @@
 from random import randint
 
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from webapp.models import GameSession, SessionUser, SmartDice, RollResult
-from webapp.mqtt_client import subscribe_dice, unsubscribe_dice, set_on_message_dice
+from webapp.mqtt_client import receive_mqtt_dice_messages
 
 
 def index(request):
@@ -75,23 +74,17 @@ def add_dice(request, session_id):
     game_session = get_object_or_404(GameSession, id=session_id)
     new_dice = SmartDice(dice_number=dice_number, session=game_session)
     new_dice.save()
-    subscribe_dice(dice_number)
     return redirect('session', session_id=session_id)
 
 
 def remove_dice(request, session_id, dice_id):
     dice = get_object_or_404(SmartDice, id=dice_id)
-    dice_number = dice.dice_number
-    unsubscribe_dice(dice_number)
     dice.delete()
     return redirect('session', session_id=session_id)
 
 
+@receive_mqtt_dice_messages
 def on_message_dice(dice_number, message):
-    dice = SmartDice.objects.get(dice_number=dice_number)
+    dice = SmartDice.objects.filter(dice_number=dice_number).first()
     if dice:
-        result = RollResult(mode='D6', value=randint(1, 6), user=dice.session.active_user, session=dice.session)
-        result.save()
-
-
-set_on_message_dice(on_message_dice)
+        RollResult.objects.create(mode='D6', value=randint(1, 6), user=dice.session.active_user, session=dice.session)

@@ -1,14 +1,13 @@
 import paho.mqtt.client as mqtt
 
-# from webapp.models import RollResult, SmartDice
-
-TOPIC_PREFIX_SEPARATOR = ":"
-SMARTDICE_TOPIC_PREFIX = "smartdice"
+MQTT_BROKER_KEEPALIVE = 60
+MQTT_BROKER_PORT = 1883
+MQTT_BROKER_HOST = "test.mosquitto.org"
+SMARTDICE_TOPIC = 'smartdice'
 
 
 def on_connect(cl, userdata, flags, rc):
-    # resubscribe if connection was lost
-    cl.subscribe("$SYS/#")
+    cl.subscribe(SMARTDICE_TOPIC + "/#")
 
 
 def on_message_dice(dice_number, message):
@@ -19,33 +18,19 @@ _on_message_dice = on_message_dice
 
 
 def on_message(client, userdata, msg):
-    # print("{}: {}".format(msg.topic, msg.payload))
-    if msg.topic.startswith(SMARTDICE_TOPIC_PREFIX + TOPIC_PREFIX_SEPARATOR):
-        dice_number = int(msg.topic.split(TOPIC_PREFIX_SEPARATOR)[1])
+    if msg.topic.startswith(SMARTDICE_TOPIC):
+        dice_number = int(msg.topic.split('/')[1])
         _on_message_dice(dice_number, msg.payload)
 
 
-# dice = SmartDice.objects.get(dice_number=dice_number)
-# if dice:
-#    result = RollResult(mode='D6', value=1, user=dice.session.active_user, session=dice.session)
-#    result.save()
-
-
-def set_on_message_dice(func):
+def receive_mqtt_dice_messages(func):
     global _on_message_dice
     _on_message_dice = func
-
-
-def subscribe_dice(dice_number):
-    client.subscribe(SMARTDICE_TOPIC_PREFIX + TOPIC_PREFIX_SEPARATOR + str(dice_number))
-
-
-def unsubscribe_dice(dice_number):
-    client.unsubscribe(SMARTDICE_TOPIC_PREFIX + TOPIC_PREFIX_SEPARATOR + str(dice_number))
+    return func
 
 
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("test.mosquitto.org", 1883, 60)
+client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, MQTT_BROKER_KEEPALIVE)
