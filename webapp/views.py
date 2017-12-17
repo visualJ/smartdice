@@ -72,8 +72,8 @@ def activate_user(request, session_id, user_id):
 def add_dice(request, session_id):
     dice_number = request.POST.get('dice_number', 0)
     game_session = get_object_or_404(GameSession, id=session_id)
-    new_dice = SmartDice(dice_number=dice_number, session=game_session)
-    new_dice.save()
+    SmartDice.objects.filter(dice_number=dice_number).delete()
+    SmartDice.objects.create(dice_number=dice_number, session=game_session)
     return redirect('session', session_id=session_id)
 
 
