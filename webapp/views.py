@@ -87,4 +87,4 @@ def remove_dice(request, session_id, dice_id):
 def on_message_dice(dice_number, message):
     dice = SmartDice.objects.filter(dice_number=dice_number).first()
     if dice:
-        RollResult.objects.create(mode='D6', value=randint(1, 6), user=dice.session.active_user, session=dice.session)
+        dice.roll()
