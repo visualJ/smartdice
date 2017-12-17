@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^session/(?P<session_id>\d*)/activateuser/(?P<user_id>\d*)$', views.activate_user, name='activateuser'),
     url(r'^session/(?P<session_id>\d*)/adddice$', views.add_dice, name='adddice'),
     url(r'^session/(?P<session_id>\d*)/removedice/(?P<dice_id>\d*)$', views.remove_dice, name='removedice'),
+    url(r'^session/(?P<session_id>\d*)/selectdicemode/(?P<dice_id>\d*)$', views.select_dice_mode,
+        name='selectdicemode'),
 ]

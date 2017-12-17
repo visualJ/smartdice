@@ -1,10 +1,8 @@
-from random import randint
-
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from webapp.models import GameSession, SessionUser, SmartDice, RollResult
+from webapp.models import GameSession, SessionUser, SmartDice
 from webapp.mqtt_client import receive_mqtt_dice_messages
 
 
@@ -86,6 +84,13 @@ def add_dice(request, session_id):
 def remove_dice(request, session_id, dice_id):
     dice = get_object_or_404(SmartDice, id=dice_id)
     dice.delete()
+    return redirect('session', session_id=session_id)
+
+
+def select_dice_mode(request, session_id, dice_id):
+    dice = get_object_or_404(SmartDice, id=dice_id)
+    new_mode = request.POST.get('mode', '')
+    dice.set_mode(new_mode)
     return redirect('session', session_id=session_id)
 
 
