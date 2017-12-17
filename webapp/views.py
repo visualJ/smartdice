@@ -19,7 +19,10 @@ def show_session(request, game_session):
 
 
 def session(request, session_id=None):
-    session_id = session_id if session_id else request.POST.get('sessionid', 0)
+    try:
+        session_id = int(session_id if session_id else request.POST.get('sessionid', 0))
+    except ValueError:
+        return redirect('index')
     game_session = get_object_or_404(GameSession, id=session_id)
     return show_session(request, game_session)
 
@@ -39,13 +42,12 @@ def end_session(request, session_id):
 def add_user(request, session_id):
     game_session = get_object_or_404(GameSession, id=session_id)
     user_name = request.POST.get('username', '')
-    session_user = SessionUser(name=user_name, session=game_session)
-    session_user.save()
-
-    # make the user active, if it is the first user in the session
-    if not game_session.active_user:
-        game_session.active_user = session_user
-        game_session.save()
+    if user_name:
+        session_user = SessionUser.objects.create(name=user_name, session=game_session)
+        # make the user active, if it is the first user in the session
+        if not game_session.active_user:
+            game_session.active_user = session_user
+            game_session.save()
     return redirect('session', session_id=session_id)
 
 
@@ -70,10 +72,14 @@ def activate_user(request, session_id, user_id):
 
 
 def add_dice(request, session_id):
-    dice_number = request.POST.get('dice_number', 0)
-    game_session = get_object_or_404(GameSession, id=session_id)
-    SmartDice.objects.filter(dice_number=dice_number).delete()
-    SmartDice.objects.create(dice_number=dice_number, session=game_session)
+    try:
+        dice_number = int(request.POST.get('dice_number', 0))
+    except ValueError:
+        pass
+    else:
+        game_session = get_object_or_404(GameSession, id=session_id)
+        SmartDice.objects.filter(dice_number=dice_number).delete()
+        SmartDice.objects.create(dice_number=dice_number, session=game_session)
     return redirect('session', session_id=session_id)
 
 
