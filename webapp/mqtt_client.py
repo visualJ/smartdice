@@ -15,6 +15,7 @@ def on_message_dice(dice_number, message):
 
 
 _on_message_dice = on_message_dice
+client = mqtt.Client()
 
 
 def on_message(client, userdata, msg):
@@ -29,8 +30,9 @@ def receive_mqtt_dice_messages(func):
     return func
 
 
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
-
-client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, MQTT_BROKER_KEEPALIVE)
+def connect_client():
+    global client
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect(MQTT_BROKER_HOST, MQTT_BROKER_PORT, MQTT_BROKER_KEEPALIVE)
+    client.loop_start()
