@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from webapp.models import GameSession, SessionUser, SmartDice
-from webapp.mqtt_client import receive_mqtt_dice_messages
+from webapp.mqtt_client import receive_mqtt_dice_messages, publish_message_dice
 
 
 def index(request):
@@ -91,6 +91,7 @@ def select_dice_mode(request, session_id, dice_id):
     dice = get_object_or_404(SmartDice, id=dice_id)
     new_mode = request.POST.get('mode', '')
     dice.set_mode(new_mode)
+    publish_message_dice(dice.dice_number, 'getmode', new_mode)
     return redirect('session', session_id=session_id)
 
 

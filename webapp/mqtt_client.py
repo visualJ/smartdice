@@ -36,6 +36,10 @@ def receive_mqtt_dice_messages(func):
     return func
 
 
+def publish_message_dice(dice_number, topic, message):
+    client.publish('{}/{}/{}'.format(SMARTDICE_TOPIC, dice_number, topic), message)
+
+
 def connect_client():
     global client
     client.on_connect = on_connect
