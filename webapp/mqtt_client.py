@@ -7,10 +7,10 @@ SMARTDICE_TOPIC = 'smartdice'
 
 
 def on_connect(cl, userdata, flags, rc):
-    cl.subscribe(SMARTDICE_TOPIC + "/#")
+    cl.subscribe(SMARTDICE_TOPIC + "/+/+")
 
 
-def on_message_dice(dice_number, message):
+def on_message_dice(dice_number, topic, message):
     print("{}: {}".format(dice_number, message))
 
 
@@ -19,9 +19,15 @@ client = mqtt.Client()
 
 
 def on_message(client, userdata, msg):
-    if msg.topic.startswith(SMARTDICE_TOPIC):
-        dice_number = int(msg.topic.split('/')[1])
-        _on_message_dice(dice_number, msg.payload)
+    try:
+        topic_parts = msg.topic.split('/')
+        dice_number = int(topic_parts[1])
+        topic = topic_parts[2]
+        message = str(msg.payload, encoding="UTF-8")
+    except ValueError and IndexError:
+        pass
+    else:
+        _on_message_dice(dice_number, topic, message)
 
 
 def receive_mqtt_dice_messages(func):

@@ -95,7 +95,10 @@ def select_dice_mode(request, session_id, dice_id):
 
 
 @receive_mqtt_dice_messages
-def on_message_dice(dice_number, message):
+def on_message_dice(dice_number, topic, message):
     dice = SmartDice.objects.filter(dice_number=dice_number).first()
     if dice:
-        dice.roll()
+        if topic == 'roll':
+            dice.roll()
+        elif topic == 'setmode':
+            dice.set_mode(message)
