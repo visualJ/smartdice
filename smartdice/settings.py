@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'qrcode',
     'webapp.apps.WebappConfig',
     'django.contrib.admin',
@@ -56,6 +57,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'smartdice.urls'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "smartdice.routing.channel_routing",
+    },
+}
 
 TEMPLATES = [
     {

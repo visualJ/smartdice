@@ -3,21 +3,28 @@
 {% block title %}SmartDice{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm">
-        {% include "webapp/session-card.html" %}
+    <script>
+        socket = new WebSocket("ws://" + window.location.host + "/");
+        socket.onmessage = function (e) {
+            location.reload()
+        };
+        console.log(socket.readyState);
+    </script>
+    <div class="row">
+        <div class="col-sm">
+            {% include "webapp/session-card.html" %}
+        </div>
+        <div class="col-sm-5">
+            {% include "webapp/dice-card.html" %}
+        </div>
     </div>
-    <div class="col-sm-5">
-        {% include "webapp/dice-card.html" %}
+    <br>
+    <div class="row">
+        <div class="col-sm">
+            {% include "webapp/results-card.html" %}
+        </div>
+        <div class="col-sm-5">
+            {% include "webapp/users-card.html" %}
+        </div>
     </div>
-</div>
-<br>
-<div class="row">
-    <div class="col-sm">
-        {% include "webapp/results-card.html" %}
-    </div>
-    <div class="col-sm-5">
-        {% include "webapp/users-card.html" %}
-    </div>
-</div>
 {% endblock %}

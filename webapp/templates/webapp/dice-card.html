@@ -11,7 +11,7 @@
         <span class="list-group-item rounded-0 d-flex justify-content-between align-items-center w-100">
             {{ dice.dice_number }}
             <form name="selectmode{{ dice.dice_number }}" action="{% url 'selectdicemode' session_id=game_session.id dice_id=dice.id %}" method="post">
-                <select name="mode" class="form-control" onchange="document.selectmode{{ dice.dice_number }}.submit();">
+                <select name="mode" autocomplete="off" class="form-control" onchange="document.selectmode{{ dice.dice_number }}.submit();">
                 {% for mode in dice.modes.keys %}
                     <option {% if mode == dice.mode %}selected{% endif %} value="{{ mode }}">{{ mode }}</option>
                 {% endfor %}

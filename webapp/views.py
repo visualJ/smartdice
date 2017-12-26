@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from webapp.models import GameSession, SessionUser, SmartDice
 from webapp.mqtt_client import receive_mqtt_dice_messages, publish_message_dice
+from webapp.websockets import ws_send_update
 
 
 def index(request):
@@ -46,6 +47,7 @@ def add_user(request, session_id):
         if not game_session.active_user:
             game_session.active_user = session_user
             game_session.save()
+        ws_send_update()
     return redirect('session', session_id=session_id)
 
 
@@ -58,6 +60,7 @@ def remove_user(request, session_id, user_id):
     if game_session.sessionuser_set.count() > 0:
         game_session.active_user = game_session.sessionuser_set.first()
         game_session.save()
+    ws_send_update()
     return redirect('session', session_id=session_id)
 
 
@@ -66,6 +69,7 @@ def activate_user(request, session_id, user_id):
     session_user = get_object_or_404(SessionUser, id=user_id)
     game_session.active_user = session_user
     game_session.save()
+    ws_send_update()
     return redirect('session', session_id=session_id)
 
 
@@ -78,12 +82,14 @@ def add_dice(request, session_id):
         game_session = get_object_or_404(GameSession, id=session_id)
         SmartDice.objects.filter(dice_number=dice_number).delete()
         SmartDice.objects.create(dice_number=dice_number, session=game_session)
+        ws_send_update()
     return redirect('session', session_id=session_id)
 
 
 def remove_dice(request, session_id, dice_id):
     dice = get_object_or_404(SmartDice, id=dice_id)
     dice.delete()
+    ws_send_update()
     return redirect('session', session_id=session_id)
 
 
@@ -92,6 +98,7 @@ def select_dice_mode(request, session_id, dice_id):
     new_mode = request.POST.get('mode', '')
     dice.set_mode(new_mode)
     publish_message_dice(dice.dice_number, 'getmode', new_mode)
+    ws_send_update()
     return redirect('session', session_id=session_id)
 
 
@@ -101,5 +108,7 @@ def on_message_dice(dice_number, topic, message):
     if dice:
         if topic == 'roll':
             dice.roll()
+            ws_send_update()
         elif topic == 'setmode':
             dice.set_mode(message)
+            ws_send_update()
