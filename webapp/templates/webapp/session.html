@@ -11,19 +11,18 @@
         console.log(socket.readyState);
     </script>
     <div class="row">
-        <div class="col-sm">
+        <div class="col-12 col-lg mb-3">
             {% include "webapp/session-card.html" %}
         </div>
-        <div class="col-sm-5">
+        <div class="col-12 col-lg-5 mb-3">
             {% include "webapp/dice-card.html" %}
         </div>
     </div>
-    <br>
     <div class="row">
-        <div class="col-sm">
+        <div class="col-12 col-lg order-2 order-lg-1 mb-3">
             {% include "webapp/results-card.html" %}
         </div>
-        <div class="col-sm-5">
+        <div class="col-12 col-lg-5 order-1 order-lg-2 mb-3">
             {% include "webapp/users-card.html" %}
         </div>
     </div>
