@@ -25,6 +25,7 @@ class SmartDice(models.Model):
     dice_number = models.IntegerField()
     session = models.ForeignKey(GameSession, on_delete=models.CASCADE, default=None)
     mode = models.CharField(max_length=20, default='D6')
+    battery = models.IntegerField(default=100)
 
     modes = {'D6': lambda dice: randint(1, 6),
              'D12': lambda dice: randint(1, 12),
@@ -41,3 +42,7 @@ class SmartDice(models.Model):
         if new_mode in SmartDice.modes.keys():
             self.mode = new_mode
             self.save()
+
+    def set_battery(self, new_battery):
+        self.battery = new_battery
+        self.save()

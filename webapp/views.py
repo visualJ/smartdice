@@ -112,3 +112,6 @@ def on_message_dice(dice_number, topic, message):
         elif topic == 'setmode':
             dice.set_mode(message)
             ws_send_update()
+        elif topic == 'battery':
+            dice.set_battery(message)
+            ws_send_update()
